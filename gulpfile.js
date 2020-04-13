@@ -14,38 +14,20 @@ const isDev = (process.argv.indexOf('--dev') !== -1);
 const isProd = !isDev;
 const isSync = (process.argv.indexOf('--sync') !== -1);
 
-/*
-	1. browserSync для html
-	2. 
-		gulp-uncss - удаление неиспользуемого css
-		gulp-group-css-media-queries - соединение media-запрос
-	3. по желанию pug html препроц
-*/
-
-/*
-let cssFiles = [
-	'./node_modules/normalize.css/normalize.css',
-	'./src/css/base.css',
-	'./src/css/grid.css',
-	'./src/css/humans.css'
-];
-*/
 
 function clear(){
 	return del('build/*');
 }
 
 function styles(){
-	return gulp.src('./src/css/+(styles|styles-per|styles-ie9).less')
+	return gulp.src('./src/css/+(styles).less')
 			   .pipe(gulpif(isDev, sourcemaps.init()))
 			   .pipe(less())
-			   //.pipe(concat('style.css'))
 			   .pipe(gcmq())
 			   .pipe(autoprefixer({
 		            browsers: ['> 0.1%'],
 		            cascade: false
 		        }))
-			   //.on('error', console.error.bind(console))
 			   .pipe(gulpif(isProd, cleanCSS({
 			   		level: 2
 			   })))
@@ -83,10 +65,6 @@ function grid(done){
 	delete require.cache[require.resolve('./smartgrid.js')];
 
 	let settings = require('./smartgrid.js');
-	smartgrid('./src/css', settings);
-
-	settings.offset = '3.1%';
-	settings.filename = 'smart-grid-per';
 	smartgrid('./src/css', settings);
 
 	done();
