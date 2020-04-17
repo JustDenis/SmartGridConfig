@@ -9,11 +9,11 @@ const gulpif = require('gulp-if');
 const gcmq = require('gulp-group-css-media-queries');
 const less = require('gulp-less');
 const smartgrid = require('smart-grid');
+const cssnano = require('gulp-cssnano');
 
 const isDev = (process.argv.indexOf('--dev') !== -1);
 const isProd = !isDev;
-const isSync = (process.argv.indexOf('--sync') !== -1);
-
+const isSync = (process.argv.indexOf('--sync') !== -1); 
 
 function clear(){
 	return del('build/*');
@@ -31,6 +31,7 @@ function styles(){
 			   .pipe(gulpif(isProd, cleanCSS({
 			   		level: 2
 			   })))
+			   .pipe(cssnano())
 			   .pipe(gulpif(isDev, sourcemaps.write()))
 			   .pipe(gulp.dest('./build/css'))
 			   .pipe(gulpif(isSync, browserSync.stream()));
